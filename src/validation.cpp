@@ -3633,9 +3633,6 @@ void PruneStaleBlockIndexes()
     // This isn't going to change while we're processing, so just leave and try again later.
     if (!pindexBestHeader) return;
 
-    // This won't change during InitialBlockDownload either.
-    if (IsInitialBlockDownload()) return;
-
     uint32_t irrelevantIndexes = 0;
     int64_t lowestPrunedHeight = -1;
     int64_t currentHeight;
@@ -3837,6 +3834,8 @@ bool CChainState::ActivateBestChain(CValidationState &state, const CChainParams&
     if (!FlushStateToDisk(chainparams, state, FlushStateMode::PERIODIC)) {
         return false;
     }
+
+    PruneStaleBlockIndexes();
 
     return true;
 }
